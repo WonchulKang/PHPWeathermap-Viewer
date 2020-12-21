@@ -23,3 +23,24 @@ cd ${BASE_DIR}
 
 ./weathermap --config ${CONFIG_DIR}/[설정파일 이름] --output ${OUTPUT_DIR}/${datestamp}/${timestamp}.png
 ```
+
+해당 스크립트에서 이미지 파일 저장 위치는 Flask 폴더 내부 app/static/image 폴더여야 합니다.
+
+즉, 모든 설정이 완료되었을 때 아래와 같은 폴더 구조가 됩니다.
+
+```
+FLASK_ROOT /
+           / weathermap.wsgi
+           / run.py
+           / app /
+                 / __init__.py
+                 / config.py
+                 / static /
+                          / css /
+                                / main.css 
+                          / js /
+                               / main.js
+                          / image / [년-월-일] / [년-월-일T시:분+09:00.png]    # php weathermap을 통해 생성된 이미지들
+                 / template /
+                            / index.html
+```
