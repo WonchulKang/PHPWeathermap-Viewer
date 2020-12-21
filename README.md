@@ -2,6 +2,14 @@
 
 PHP-Weathermap을 Stand-alone으로 동작 시킬 때 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
 
+## UI 예제
+![메인화면](sample/main_1.png)
+
+## MAP 적용 UI 예제
+![메인화면](sample/main_2.png)
+
+
+
 # 사용법
 
 ## 사용을 위한 기본 준비
@@ -51,7 +59,7 @@ FLASK_ROOT /
 
 설정 파일 수정은 간단합니다.
 ```
-FLASK_ROOT / config.py
+FLASK_ROOT / app / config.py
 ```
 파일을 열어 아래와 같이 수정합니다.
 
@@ -63,6 +71,22 @@ MAP_DATA = []
 ```
 
 MAP\_BASE\_URL과 MAP\_DATA는 MAP을 사용하여, 그래프를 볼 수 있게 만드는 경우에만 사용합니다.
+
+```
+FLASK_ROOT / weathermap.wsgi
+```
+
+파일을 열어 아래와 같이 수정합니다.
+
+```
+#!/usr/bin/python3
+import sys
+sys.path.insert(0, "[FLASK_ROOT]")
+from app import app as application
+```
+
+## 테스트 실행
+[FLASK_ROOT]/run.py를 실행합니다.
 
 ## MAP을 사용하여 cacti 그래프 보이게 하기
 
