@@ -7,7 +7,7 @@ PHP-Weathermap을 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI �
 
 아래는 weathermap 생성 스크립트의 예 입니다.
 
-`
+```
 #!/bin/bash
 
 BASE_DIR="[Weathermap 설치 디렉토리]"
@@ -22,4 +22,4 @@ mkdir ${OUTPUT_DIR}/${datestamp}
 cd ${BASE_DIR}
 
 ./weathermap --config ${CONFIG_DIR}/[설정파일 이름] --output ${OUTPUT_DIR}/${datestamp}/${timestamp}.png
-`
+```
