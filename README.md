@@ -3,6 +3,8 @@
 PHP-Weathermap을 Stand-alone으로 동작 시킬 때 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
 
 # 사용법
+
+## 사용을 위한 기본 준비
 기본적으로 cacti 및 php-weathermap은 설치되어 있어야 하며, crontab을 통하여 weathermap 이미지가 지속적으로 생성되어야 합니다.
 
 아래는 weathermap 생성 스크립트의 예 입니다.
@@ -26,7 +28,7 @@ cd ${BASE_DIR}
 
 해당 스크립트에서 이미지 파일 저장 위치는 Flask 폴더 내부 app/static/image 폴더여야 합니다.
 
-즉, 모든 설정이 완료되었을 때 아래와 같은 폴더 구조가 됩니다.
+즉, 해당 코드를 다운받아서 압축을 푼 후 app/static/image 폴더를 설정해주시면 됩니다. 최종적으로 아래와 같은 디렉토리 구성을 가지게 됩니다.
 
 ```
 FLASK_ROOT /
@@ -44,3 +46,18 @@ FLASK_ROOT /
                  / template /
                             / index.html
 ```
+
+## 설정 파일 수정
+
+설정 파일 수정은 간단합니다.
+```
+FLASK_ROOT / config.py
+```
+파일을 열어 아래와 같이 수정합니다.
+
+```
+TITLE = """페이지에 표시될 타이틀"""
+IMAGE_PATH = """[FLASK_ROOT]/app/static/image"""
+```
+
+위와 같이 수정해주시면 됩니다.
