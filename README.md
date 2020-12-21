@@ -1,6 +1,6 @@
 # PHPWeathermap-Viewer
 
-PHP-Weathermap을 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
+PHP-Weathermap을 Stand-alone으로 동작 시킬 때 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
 
 # 사용법
 기본적으로 cacti 및 php-weathermap은 설치되어 있어야 하며, crontab을 통하여 weathermap 이미지가 지속적으로 생성되어야 합니다.
