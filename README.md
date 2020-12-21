@@ -58,6 +58,15 @@ FLASK_ROOT / config.py
 ```
 TITLE = """페이지에 표시될 타이틀"""
 IMAGE_PATH = """[FLASK_ROOT]/app/static/image"""
+MAP_BASE_URL = """"""
+MAP_DATA = []
 ```
 
-위와 같이 수정해주시면 됩니다.
+MAP\_BASE\_URL과 MAP\_DATA는 MAP을 사용하여, 그래프를 볼 수 있게 만드는 경우에만 사용합니다.
+
+## MAP을 사용하여 cacti 그래프 보이게 하기
+
+### cacti, guest 사용자 설정하기
+cacti 설정화면에서 인증탭으로 이동하여, 일반사용자를 "guest"로 설정합니다.
+
+![cacti 설정 화면](sample/01.png)
