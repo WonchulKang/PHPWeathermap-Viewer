@@ -1,0 +1,70 @@
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
+	<script src="{{url_for('static', filename='js/main.js')}}"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="title">
+			<h1>{{ title }}</h1>
+		</div>
+		<div class="menu">
+			<select name="year" id="year_select">
+				<option value="-">-</option>
+			</select>
+			-
+			<select name="month" id="month_select">
+				<option value="-">-</option>
+			</select>
+			-
+			<select name="day" id="day_select">
+				<option value="-">-</option>
+			</select>
+			&nbsp;
+			<select name="hour" id="hour_select">
+				<option value="-">-</option>
+			</select>
+			:
+			<select name="min" id="min_select">
+				<option value="-">-</option>
+			</select>
+			&nbsp;
+			<input type=button onclick='reset();' value='RESET'>
+			<input type=button onclick='refresh_call();' value='REFRESH OFF' id='refresh_button'>
+		</div>
+		<div class="contents">
+			<div class="current_time" id='c_time'>
+			</div>
+			<div class="image">
+				<a href='' id='prev_link'>&#5130; prev</a>
+				<img src='' align="middle" id='view' usemap="#image_location"/>
+				<a href='' id='next_link'>next &#5125;</a>
+			</div>
+			<map name="image_location" id="image_location">
+				{% for map_item in map_data %}
+				<area shape="{{map_item[0]}}"
+					coords="{{map_item[1]}}"
+					onclick="view_graph('{{base_url}}', '{{map_item[2]}}');">
+				{% endfor %}
+			</map>
+		</div>
+		<div class="float hidden" id="float">
+			<div class='graph_view' id='graph_view'>
+				<div class="close_menu">
+					<span class="close" onclick='view_close()'>&times;</span>
+				</div>
+				<div class="modal_contents">
+					<img src='' id='graph_img'/>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		window.onload = start_up();
+		window.onclick = function(event) {
+			if (event.target == document.getElementById("float")){
+				view_close();
+			}
+		}
+	</script>
+</body>
