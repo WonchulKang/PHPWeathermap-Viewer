@@ -43,6 +43,7 @@ mv phpweathermap-viewer-master /var/www/weathermap
 │   │   └── js
 │   │       └── main.js
 │   └── templates
+│       ├── dashboard.html
 │       └── index.html
 ├── run.py
 ├── sample
