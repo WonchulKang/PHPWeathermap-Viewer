@@ -9,6 +9,10 @@ app = Flask(__name__)
 def index():
     return render_template("index.html", title=config.TITLE, map_data=config.MAP_DATA, base_url=config.MAP_BASE_URL)
 
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html", title=config.TITLE)
+
 @app.route("/data")
 def get_all_year():
     year_list = []
@@ -38,6 +42,24 @@ def get_prev(c_time):
                      'minute'   : "%02d" % temp_time_obj.minute }
         if first_time_obj > temp_time_obj:
             return None
+
+def get_next(c_time):
+    last_dir = sorted(glob.glob(config.IMAGE_PATH + "/*"))[-1]
+    last_file = sorted(glob.glob(last_dir + "/*.png"))[-1]
+    last_time_obj = datetime.datetime.strptime(os.path.basename(last_file), "%Y-%m-%dT%H:%M+09:00.png")
+
+    temp_time_obj = c_time
+    while True:
+        temp_time_obj = temp_time_obj + datetime.timedelta(minutes=1)
+        new_path = temp_time_obj.strftime("/%Y-%m-%d/%Y-%m-%dT%H:%M+09:00.png")
+        if os.path.exists(config.IMAGE_PATH + new_path):
+            return { 'year'     : "%04d" % temp_time_obj.year, \
+                     'month'    : "%02d" % temp_time_obj.month, \
+                     'day'      : "%02d" % temp_time_obj.day, \
+                     'hour'     : "%02d" % temp_time_obj.hour, \
+                     'minute'   : "%02d" % temp_time_obj.minute }
+        if last_time_obj < temp_time_obj:
+            return None
         
 
 @app.route("/data/image")
@@ -60,7 +82,7 @@ def get_image():
 
 
         if os.path.exists(config.IMAGE_PATH + filename):
-            return jsonify(filename="/static/image" + filename, prev=get_prev(current_date_time_obj))
+            return jsonify(filename="/static/image" + filename, prev=get_prev(current_date_time_obj), next=get_next(current_date_time_obj))
         else:
             abort(404);
             

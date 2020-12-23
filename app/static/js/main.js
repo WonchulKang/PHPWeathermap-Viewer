@@ -1,7 +1,4 @@
 
-refresh_timer = null;
-refresh_timer = setInterval(start_up, 30000);
-
 function view_close() {
 	$("#float").addClass("hidden");
 	$("#graph_img").attr("src", "");
@@ -30,17 +27,6 @@ function reset() {
 	start_up();
 }
 
-function refresh_call() {
-	if(refresh_timer != null) {
-		clearInterval(refresh_timer);
-		refresh_timer = null;
-		$("#refresh_button").val("REFRESH ON");
-	} else {
-		refresh_timer = setInterval(start_up, 30000);
-		$("#refresh_button").val("REFRESH OFF");
-	}
-}
-
 function update_image(year, month, day, hour, min) {
 	param = { "year" : String(year),
 		  "month" : String(month),
@@ -52,7 +38,7 @@ function update_image(year, month, day, hour, min) {
 		type	: "GET",
 		data	: param,
 		success : function(result) {
-			update_main(result['filename'], result['prev'], null);
+			update_main(result['filename'], result['prev'], result['next']);
 		},
 		error	: function() {
 			alert("이미지 업데이트에 실패하였습니다.");
@@ -72,10 +58,17 @@ function update_main(file_name, prev, next) {
 									   prev.day + "', '" +
 									   prev.hour + "', '" +
 			                                                   prev.minute + "');");
-		clearInterval(refresh_timer);
-		refresh_timer = null;
 	} else {
 		$("#prev_link").attr("href", "javascript:alert('이전 데이터가 없습니다.');");
+	}
+	if (next != null ) {
+		$("#next_link").attr("href", "javascript:update_image('" + next.year + "', '" +
+								           next.month + "', '" +
+									   next.day + "', '" +
+									   next.hour + "', '" +
+			                                                   next.minute + "');");
+	} else {
+		$("#next_link").attr("href", "javascript:alert('이후 데이터가 없습니다.');");
 	}
 }
 
@@ -204,6 +197,4 @@ function update_min(year, month, day, hour) {
 	$("#min_select").on("change", function() {
 		update_image(year, month, day, hour, $(this).val());
 	});
-	clearInterval(refresh_timer);
-	refresh_timer = null;
 }
