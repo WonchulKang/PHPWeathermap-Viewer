@@ -1,6 +1,6 @@
 # PHPWeathermap-Viewer
 
-PHP-Weathermap을 Stand-alone으로 동작 시킬 때 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
+PHP-Weathermap을 Standalone으로 동작 시킬 때 웹 상에서 보기 좋게 보여주는 Flask 기반 웹 UI 입니다.
 
 ## UI 예제
 ![메인화면](sample/main_1.png)
