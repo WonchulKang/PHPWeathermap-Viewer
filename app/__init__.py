@@ -13,27 +13,16 @@ def index():
 def dashboard():
     return render_template("dashboard.html", title=config.TITLE)
 
-@app.route("/data")
-def get_all_year():
-    year_list = []
-    for item in glob.glob(config.IMAGE_PATH + "/*"):
-        year_item = os.path.basename(item).split("-")[0]
-        if year_item not in year_list:
-            year_list.append(year_item)
-
-    year_list = sorted(year_list)
-
-    return jsonify(year=year_list)
 
 def get_prev(c_time):
     first_dir = sorted(glob.glob(config.IMAGE_PATH + "/*"))[0]
     first_file = sorted(glob.glob(first_dir + "/*.png"))[0]
-    first_time_obj = datetime.datetime.strptime(os.path.basename(first_file), "%Y-%m-%dT%H:%M+09:00.png")
+    first_time_obj = datetime.datetime.strptime(os.path.basename(first_file), "%Y-%m-%d_%H:%M.png")
 
     temp_time_obj = c_time
     while True:
         temp_time_obj = temp_time_obj - datetime.timedelta(minutes=1)
-        new_path = temp_time_obj.strftime("/%Y-%m-%d/%Y-%m-%dT%H:%M+09:00.png")
+        new_path = temp_time_obj.strftime("/%Y-%m-%d/%Y-%m-%d_%H:%M.png")
         if os.path.exists(config.IMAGE_PATH + new_path):
             return { 'year'     : "%04d" % temp_time_obj.year, \
                      'month'    : "%02d" % temp_time_obj.month, \
@@ -46,12 +35,12 @@ def get_prev(c_time):
 def get_next(c_time):
     last_dir = sorted(glob.glob(config.IMAGE_PATH + "/*"))[-1]
     last_file = sorted(glob.glob(last_dir + "/*.png"))[-1]
-    last_time_obj = datetime.datetime.strptime(os.path.basename(last_file), "%Y-%m-%dT%H:%M+09:00.png")
+    last_time_obj = datetime.datetime.strptime(os.path.basename(last_file), "%Y-%m-%d_%H:%M.png")
 
     temp_time_obj = c_time
     while True:
         temp_time_obj = temp_time_obj + datetime.timedelta(minutes=1)
-        new_path = temp_time_obj.strftime("/%Y-%m-%d/%Y-%m-%dT%H:%M+09:00.png")
+        new_path = temp_time_obj.strftime("/%Y-%m-%d/%Y-%m-%d_%H:%M.png")
         if os.path.exists(config.IMAGE_PATH + new_path):
             return { 'year'     : "%04d" % temp_time_obj.year, \
                      'month'    : "%02d" % temp_time_obj.month, \
@@ -67,7 +56,7 @@ def get_image():
     if not request.args.get("year"):
         last_dir = sorted(glob.glob(config.IMAGE_PATH + "/*"))[-1]
         last_file = sorted(glob.glob(last_dir + "/*.png"))[-1]
-        current_date_time_obj = datetime.datetime.strptime(os.path.basename(last_file), "%Y-%m-%dT%H:%M+09:00.png")
+        current_date_time_obj = datetime.datetime.strptime(os.path.basename(last_file), "%Y-%m-%d_%H:%M.png")
         re_filename = "/static/image/" + os.path.basename(last_dir) + "/" + os.path.basename(last_file)
         return jsonify(filename=re_filename, prev=get_prev(current_date_time_obj))
     else:
@@ -77,8 +66,8 @@ def get_image():
         hour = request.args.get("hour")
         minute = request.args.get("min")
         
-        filename = "/%s-%s-%s/%s-%s-%sT%s:%s+09:00.png" % (year, month, day, year, month, day, hour, minute)
-        current_date_time_obj = datetime.datetime.strptime(os.path.basename(filename), "%Y-%m-%dT%H:%M+09:00.png")
+        filename = "/%s-%s-%s/%s-%s-%s_%s:%s.png" % (year, month, day, year, month, day, hour, minute)
+        current_date_time_obj = datetime.datetime.strptime(os.path.basename(filename), "%Y-%m-%d_%H:%M.png")
 
 
         if os.path.exists(config.IMAGE_PATH + filename):
@@ -86,6 +75,17 @@ def get_image():
         else:
             abort(404);
             
+@app.route("/data")
+def get_all_year():
+    year_list = []
+    for item in glob.glob(config.IMAGE_PATH + "/*"):
+        year_item = os.path.basename(item).split("-")[0]
+        if year_item not in year_list:
+            year_list.append(year_item)
+
+    year_list = sorted(year_list)
+
+    return jsonify(year=year_list)
         
 
 @app.route("/data/<year_string>")
@@ -116,7 +116,7 @@ def get_all_day(year_string, month_string):
 def get_all_hour(year_string, month_string, day_string):
     hour_list = []
     for item in glob.glob(config.IMAGE_PATH + "/%s-%s-%s/*.png" % (year_string, month_string, day_string)):
-        hour_item = os.path.basename(item).split("T")[1].split(":")[0]
+        hour_item = os.path.basename(item).split("_")[1].split(":")[0]
         if hour_item not in hour_list:
             hour_list.append(hour_item)
 
@@ -128,8 +128,8 @@ def get_all_hour(year_string, month_string, day_string):
 @app.route("/data/<year_string>/<month_string>/<day_string>/<hour_string>")
 def get_all_min(year_string, month_string, day_string, hour_string):
     min_list = []
-    for item in glob.glob(config.IMAGE_PATH + "/%s-%s-%s/*T%s*.png" % (year_string, month_string, day_string, hour_string)):
-        min_item = os.path.basename(item).split("T")[1].split(":")[1].split("+")[0]
+    for item in glob.glob(config.IMAGE_PATH + "/%s-%s-%s/*_%s*.png" % (year_string, month_string, day_string, hour_string)):
+        min_item = os.path.basename(item).split("_")[1].split(":")[1].split(".")[0]
         if min_item not in min_list:
             min_list.append(min_item)
 

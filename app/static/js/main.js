@@ -49,7 +49,7 @@ function update_image(year, month, day, hour, min) {
 function update_main(file_name, prev, next) {
 	$("#view").attr("src", file_name);
 	var split_string = file_name.split("/");
-	var time_info = split_string[split_string.length - 1].split("+")[0].replace("T", " ");
+	var time_info = split_string[split_string.length - 1].split(".")[0].replace("_", " ");
 	$("#c_time").text(time_info);
 
 	if (prev != null ) {
