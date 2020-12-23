@@ -12,6 +12,145 @@ PHP-Weathermap을 Stand-alone으로 동작 시킬 때 웹 상에서 보기 좋�
 
 # 사용법
 
+## 00. 시작하기 전에
+본 사용법에서는 "/var/www/weathermap" 디렉토리를 설치 장소로 사용합니다.
+
+## 01. 다운로드 및 압축해제
+해당 코드를 다운로드 받아서 압축해제 합니다.
+
+```
+tar xvf phpweathermap-viewer-master.tar
+```
+
+압축을 해제한 후 원하는 폴더로 이동 시킵니다.
+
+```
+mv phpweathermap-viewer-master /var/www/weathermap
+```
+
+위의 명령어를 완료하면 아래와 같은 폴더 구조가 생성됩니다.
+
+```
+/var/www/weathermap
+├── README.md
+├── app
+│   ├── __init__.py
+│   ├── config.py
+│   ├── static
+│   │   ├── css
+│   │   │   └── main.css
+│   │   ├── image
+│   │   └── js
+│   │       └── main.js
+│   └── templates
+│       └── index.html
+├── run.py
+├── sample
+│   ├── 01.png
+│   ├── 02.png
+│   ├── main_1.png
+│   └── main_2.png
+└── weathermap.wsgi
+```
+
+## 02. PHP Weathermap 생성 스크립트 작성
+
+PHP Weathermap을 이용하여 /var/www/weathermap/app/static/image 폴더에 png 파일을 생성하여야 합니다.
+
+이를 위해서 아래와 같은 스크립트를 사용하여 주기적으로 동작하도록 crond에 등록합니다.
+
+먼저 스크립트를 작성합니다. 스크립트 파일명은 원하시는 것으로 정하시면 됩니다. 여기서는 create\_weathermap.sh로 정합니다.
+
+```
+vim create_weathermap.sh
+```
+
+```
+#!/bin/bash
+
+## PHP Weathermap 설치 위치
+BASE_DIR="[PHP WEATHERMAP 설치 디렉토리 위치]"
+
+## 이미지를 저장할 위치
+OUTPUT_DIR="/var/www/weathermap/app/static/image"
+
+## 설정 파일 위치
+CONFIG_DIR="[PHP WEATERMAP 설정 파일 위치]"
+
+## 실행 시간 기준 디렉토리명 파일명 생성
+datestamp=`date "+%Y-%m-%d"`
+timestamp=`date "+%Y-%m-%d_%H:%M"`
+
+## 실제 디렉토리 생성
+mkdir ${OUTPUT_DIR}/${datestamp}
+
+cd ${BASE_DIR}
+
+## 웨더맵 생성
+./weathermap --config ${CONFIG_DIR} --output ${OUTPUT_DIR}/${datestamp}/${timestamp}.png
+```
+
+해당 파일은 원하시는 곳에 두고 실행 권한을 줍니다.
+
+```
+chmod +x create_weathermap.sh
+```
+
+해당 파일을 crontab에 등록 합니다.
+
+```
+crontab -e
+```
+
+```
+*/1 * * * * [실행 파일명 위치]/create_weathermap.sh > /dev/null 2>&1
+```
+
+1분 후에 해당 폴더로 이동하여 파일이 생성되었는지 확인합니다.
+
+아래와 같이 이미지 파일이 생성되었다면 성공입니다.
+
+```
+├── app
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   ├── __init__.cpython-38.pyc
+│   │   └── config.cpython-38.pyc
+│   ├── config.py
+│   ├── static
+│   │   ├── css
+│   │   │   └── main.css
+│   │   ├── image
+│   │   │   └── 2020-12-23
+│   │   │       ├── 2020-12-23_15:25.png
+│   │   │       ├── 2020-12-23_15:26.png
+│   │   │       ├── 2020-12-23_15:27.png
+│   │   │       ├── 2020-12-23_15:28.png
+│   │   │       ├── 2020-12-23_15:29.png
+│   │   │       ├── 2020-12-23_15:30.png
+│   │   │       ├── 2020-12-23_15:31.png
+│   │   │       ├── 2020-12-23_15:32.png
+│   │   │       ├── 2020-12-23_15:33.png
+│   │   │       ├── 2020-12-23_15:34.png
+│   │   │       ├── 2020-12-23_15:35.png
+│   │   │       ├── 2020-12-23_15:36.png
+│   │   │       ├── 2020-12-23_15:37.png
+│   │   │       ├── 2020-12-23_15:38.png
+│   │   │       ├── 2020-12-23_15:39.png
+│   │   │       ├── 2020-12-23_15:40.png
+│   │   │       ├── 2020-12-23_15:41.png
+│   │   │       ├── 2020-12-23_15:42.png
+│   │   │       ├── 2020-12-23_15:43.png
+│   │   │       └── 2020-12-23_15:44.png
+│   │   └── js
+│   │       └── main.js
+│   └── templates
+│       ├── dashboard.html
+│       └── index.html
+├── run.py
+└── weathermap.wsgi
+```
+
 ## 사용을 위한 기본 준비
 기본적으로 cacti 및 php-weathermap은 설치되어 있어야 하며, crontab을 통하여 weathermap 이미지가 지속적으로 생성되어야 합니다.
 
